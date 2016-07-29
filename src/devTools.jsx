@@ -9,7 +9,27 @@ const ast2string = (ast, live) =>
   )
 
 let positions = ['left', 'top', 'right', 'bottom']
+
 let nextPosition = c => positions[(positions.indexOf(c) + 1) % 4]
+
+const theme = {
+  base00: '#1B2B34',
+  base01: '#EC5F67',
+  base03: '#99C794',
+  base06: '#FAC863',
+  base05: '#6699CC',
+  base04: '#C594C5',
+  base02: '#5FB3B3',
+  base07: '#A7ADBA',
+  base08: '#4F5B66',
+  base09: '#EC5F67',
+  base0A: '#99C794',
+  base0B: '#FAC863',
+  base0D: '#6699CC',
+  base0C: '#C594C5',
+  base0E: '#5FB3B3',
+  base0F: '#D8DEE9'
+}
 
 function instrument (horizon) {
   let observ = {
@@ -79,8 +99,13 @@ export function createDevTools (horizon) {
 
     render () {
       return <Dock position={this.state.position} isVisible={this.state.visible} dimMode='none'>
-        <pre>
-          <JSONTree data={this.state.queries} />
+        <pre style={{ padding: '10px', width: '100%', height: '100%', margin: 0, overflow: 'auto', backgroundColor: theme.base00 }}>
+          <span>
+            <img src='http://horizon.io/images/horizon-logo.png' style={{ width: '50%' }} />
+            <span style={{ color: '#5e5e5e' }}>[DEV TOOLS]</span>
+          </span>
+          <hr style={{ borderStyle: 'solid', color: '#5e5e5e' }} />
+          <JSONTree data={this.state.queries} theme={theme} invertTheme={false} hideRoot={true} />
         </pre>
       </Dock>
     }

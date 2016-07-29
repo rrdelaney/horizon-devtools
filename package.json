@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently -c green,blue --names \"AAA,BBB\" --prefix \"[{name}]\" \"hz serve --dev\" \"webpack --watch\"",
+    "dev": "concurrently -c green,blue --names \"Horizon,Webpack\" --prefix \"[{name}]\" \"hz serve --dev\" \"webpack --watch\"",
     "build": "babel src/devTools.jsx > index.js"
   },
   "repository": {
