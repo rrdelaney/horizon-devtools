@@ -1,0 +1,41 @@
+{
+  "name": "horizon-devtools",
+  "version": "1.0.0",
+  "description": "Devtools for horizon",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently -c green,blue --names \"AAA,BBB\" --prefix \"[{name}]\" \"hz serve --dev\" \"webpack --watch\"",
+    "build": "babel src/devTools.jsx > index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rrdelaney/horizon-devtools"
+  },
+  "keywords": [
+    "horizon",
+    "react",
+    "devtools",
+    "hz"
+  ],
+  "author": "Ryan Delaney <rrdelaney@outlook.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rrdelaney/horizon-devtools/issues"
+  },
+  "homepage": "https://github.com/rrdelaney/horizon-devtools",
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
+    "concurrently": "^2.2.0",
+    "horizon": "^1.1.3",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1",
+    "webpack": "^1.13.1"
+  },
+  "dependencies": {
+    "react-dock": "^0.2.3",
+    "react-json-tree": "^0.10.0"
+  }
+}

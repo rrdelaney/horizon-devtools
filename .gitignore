@@ -1,0 +1,6 @@
+.hz/
+dist/bundle.js
+node_modules/
+rethinkdb_data/
+*.log
+index.js

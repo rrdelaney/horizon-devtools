@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="/horizon/horizon.js"></script>
+    <script>
+      var horizon = Horizon();
+      horizon.onReady(function() {
+        document.querySelector('h1').innerHTML = 'hz works!'
+      });
+      horizon.connect();
+    </script>
+  </head>
+  <body>
+   <marquee direction="left"><h1></h1></marquee>
+   <div id="root"></div>
+
+   <script src="bundle.js"></script>
+  </body>
+</html>
