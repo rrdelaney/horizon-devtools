@@ -50,7 +50,7 @@ query into the bottom text box and press `⌃ + Enter` to run it. The horizon
 instance will be bound to `horizon`. If a query excludes `fetch()` or `watch()`,
 `fetch()` will be automatically appended. If a query excludes `subscribe()`,
 `subscribe()` will be automatically appended. For example, if `horizon('users')`
-is entered, `horizon('users').fetch().subscribe()` will be run. 
+is entered, `horizon('users').fetch().subscribe()` will be run.
 
 ## API
 
@@ -65,3 +65,9 @@ updates.
 This renders the developer tools into the window. If `defaultVisible` is set
 to false, the tools will not be open at first. `defaultPosition` can be either
 `left`, `right`, `top`, or `bottom`.
+
+## Contributing
+
+To run the example use `npm run dev` and go to `localhost:8181`.
+
+To build for publishing run `npm run build`.

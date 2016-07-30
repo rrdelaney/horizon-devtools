@@ -5,3 +5,4 @@ src
 .babelrc
 webpack.config.js
 *.log
+assets
