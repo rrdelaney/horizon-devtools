@@ -78,7 +78,8 @@ export function createDevTools (horizon) {
         visible: props.defaultVisible || true,
         position: props.defaultPosition || 'right',
         queries: devtools.queries,
-        queryText: ''
+        queryText: '',
+        queryTextError: false
       }
 
       devtools.update = () => {
@@ -101,13 +102,13 @@ export function createDevTools (horizon) {
     }
 
     handleQueryTextUpdate (e) {
-      this.setState({ queryText: e.target.value })
+      this.setState({ queryText: e.target.value, queryTextError: false })
     }
 
     shouldRunQuery (e) {
       if (e.keyCode === 13 && e.ctrlKey) {
-        this.runQuery(this.state.queryText)
         this.setState({ queryText: '' })
+        this.runQuery(this.state.queryText)
 
         return false
       }
@@ -116,10 +117,11 @@ export function createDevTools (horizon) {
     runQuery (query) {
       try {
         let q = eval(query)
-        if (q.subscribe) { q.subscribe() }
+        if (q.fetch) { q = q.fetch() }
+        if (q.subscribe) { q = q.subscribe() }
         this.setState({ queries: devtools.queries })
       } catch (e) {
-        console.error(e)
+        this.setState({ queryTextError: true, queryText: e })
       }
     }
 
@@ -131,14 +133,28 @@ export function createDevTools (horizon) {
             <span style={{ color: '#5e5e5e' }}>[DEV TOOLS]</span>
           </span>
           <hr style={{ borderStyle: 'solid', color: '#5e5e5e' }} />
-          <JSONTree data={this.state.queries} theme={theme} invertTheme={false} hideRoot={true} />
+          <JSONTree
+            data={this.state.queries}
+            theme={theme}
+            invertTheme={false}
+            hideRoot={true}
+          />
         </pre>
         <textarea
           onChange={this.handleQueryTextUpdate}
           value={this.state.queryText}
           onKeyUp={this.shouldRunQuery}
           placeholder='Write a query using `horizon`. Run with ⌃ + ⏎.'
-          style={{ padding: '5px', position: 'absolute', bottom: '0', width: '97.2%', resize: 'none', height: '10%', fontSize: '12pt', fontFamily: 'monospace' }}
+          style={{ color: this.state.queryTextError ? 'red' : undefined,
+                   padding: '5px',
+                   position: 'absolute',
+                   bottom: '0',
+                   width: '97.2%',
+                   resize: 'none',
+                   height: '10%',
+                   fontSize: '12pt',
+                   fontFamily: 'monospace'
+          }}
         />
       </Dock>
     }
