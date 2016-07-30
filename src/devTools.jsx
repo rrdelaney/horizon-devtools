@@ -71,11 +71,14 @@ export function createDevTools (horizon) {
       super(props)
 
       this.handleKeyDown = this.handleKeyDown.bind(this)
+      this.handleQueryTextUpdate = this.handleQueryTextUpdate.bind(this)
+      this.shouldRunQuery = this.shouldRunQuery.bind(this)
 
       this.state = {
         visible: props.defaultVisible || true,
         position: props.defaultPosition || 'right',
-        queries: devtools.queries
+        queries: devtools.queries,
+        queryText: ''
       }
 
       devtools.update = () => {
@@ -97,16 +100,46 @@ export function createDevTools (horizon) {
       if (char.toUpperCase() === 'W' && e.ctrlKey) this.setState({ position: nextPosition(this.state.position) })
     }
 
+    handleQueryTextUpdate (e) {
+      this.setState({ queryText: e.target.value })
+    }
+
+    shouldRunQuery (e) {
+      if (e.keyCode === 13 && e.ctrlKey) {
+        this.runQuery(this.state.queryText)
+        this.setState({ queryText: '' })
+
+        return false
+      }
+    }
+
+    runQuery (query) {
+      try {
+        let q = eval(query)
+        if (q.subscribe) { q.subscribe() }
+        this.setState({ queries: devtools.queries })
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
     render () {
       return <Dock position={this.state.position} isVisible={this.state.visible} dimMode='none'>
         <pre style={{ padding: '10px', width: '100%', height: '100%', margin: 0, overflow: 'auto', backgroundColor: theme.base00 }}>
           <span>
-            <img src='http://horizon.io/images/horizon-logo.png' style={{ width: '50%' }} />
+            <img src='http://horizon.io/images/horizon-logo.png' style={{ maxWidth: '200px', width: '50%' }} />
             <span style={{ color: '#5e5e5e' }}>[DEV TOOLS]</span>
           </span>
           <hr style={{ borderStyle: 'solid', color: '#5e5e5e' }} />
           <JSONTree data={this.state.queries} theme={theme} invertTheme={false} hideRoot={true} />
         </pre>
+        <textarea
+          onChange={this.handleQueryTextUpdate}
+          value={this.state.queryText}
+          onKeyUp={this.shouldRunQuery}
+          placeholder='Write a query using `horizon`. Run with ⌃ + ⏎.'
+          style={{ padding: '5px', position: 'absolute', bottom: '0', width: '97.2%', resize: 'none', height: '10%', fontSize: '12pt', fontFamily: 'monospace' }}
+        />
       </Dock>
     }
   }
