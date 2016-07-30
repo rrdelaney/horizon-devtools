@@ -2,14 +2,13 @@
 
 > A better dev experience for Horizon users
 
+## Demo
+
+## Installation
+
 ```
 npm install --save horizon-devtools
 ```
-
-
-
-## Demo
-
 
 ## Usage
 
@@ -34,6 +33,24 @@ ReactDOM.render(<div>
   <App />
 </div>, document.getElementById('root'))
 ```
+
+## Guide
+
+The devtools will track any query you make through Horizon after the tools are
+initialized with `createDevTools`. If the query ends with `fetch()` the devtools
+will display the result of that query. If `watch()` is used 🔄 will
+show next to the query and be live updated with the results.
+
+`⌃ + Q` will show/hide the devtools.
+
+`⌃ + W` will change the position of the devtools.
+
+You can run custom queries using the query editor in the devtools. Type in a
+query into the bottom text box and press `⌃ + Enter` to run it. The horizon
+instance will be bound to `horizon`. If a query excludes `fetch()` or `watch()`,
+`fetch()` will be automatically appended. If a query excludes `subscribe()`,
+`subscribe()` will be automatically appended. For example, if `horizon('users')`
+is entered, `horizon('users').fetch().subscribe()` will be run. 
 
 ## API
 
