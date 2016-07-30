@@ -4,6 +4,8 @@
 
 ## Demo
 
+![Demo](https://github.com/rrdelaney/horizon-devtools/blob/master/assets/demo.gif)
+
 ## Installation
 
 ```
