@@ -2,11 +2,15 @@ import React, { Component } from 'react'
 import JSONTree from 'react-json-tree'
 import Dock from 'react-dock'
 
-const ast2string = (ast, live) =>
-  ['find', 'find_all', 'above', 'below', 'order', 'limit'].reduce(
+// This should be replaced with Horizon 2's `query.toString()` method
+const ast2string = (ast, live) => {
+  // All queries except `find` are an array, so we normalize `find` here to be an array
+  if (ast.find) ast.find = [ast.find]
+  return ['find', 'find_all', 'above', 'below', 'order', 'limit'].reduce(
     (res, key) => res + (!ast[key] ? '' : `.${key}(${JSON.stringify(ast[key][0]).replace(/[\[\]\"\{\}]/g, '')})`),
     (live === 'watch' ? '🔄 ' : '') + ast.collection
   )
+}
 
 let positions = ['left', 'top', 'right', 'bottom']
 
@@ -52,6 +56,7 @@ function instrument (horizon) {
     new Proxy(Object.getPrototypeOf(Object.getPrototypeOf(horizon('users'))).watch, {
       apply (_watch, thisArg, args) {
         return _watch.bind(thisArg)(...args).map(c => {
+          console.log(thisArg.toString())
           observ.queries[ast2string(thisArg._query, 'watch')] = c
           observ.update()
           return c
