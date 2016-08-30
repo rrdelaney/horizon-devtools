@@ -15,7 +15,7 @@ class App extends Component {
       posts: []
     }
 
-    horizon('posts').order('time').watch().subscribe(posts => {
+    horizon('posts').watch().subscribe(posts => {
       this.setState({ posts, loaded: true })
     })
   }

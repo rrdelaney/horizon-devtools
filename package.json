@@ -28,7 +28,7 @@
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.11.1",
     "concurrently": "^2.2.0",
-    "horizon": "^1.1.3",
+    "horizon": "^2.0.0-beta-6",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
     "snazzy": "^4.0.0",

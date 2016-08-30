@@ -40,9 +40,10 @@ function instrument (horizon) {
   Object.getPrototypeOf(Object.getPrototypeOf(horizon('users'))).fetch =
     new Proxy(Object.getPrototypeOf(Object.getPrototypeOf(horizon('users'))).fetch, {
       apply (_fetch, thisArg) {
+        let queryName = ast2string(thisArg._query, 'fetch')
         return _fetch.bind(thisArg)().map(c => {
-          observ.queries[ast2string(thisArg._query, 'fetch')] = c
-          observ.update()
+          observ.queries[queryName] = c
+          observ.update(queryName, c)
           return c
         })
       }
@@ -51,9 +52,10 @@ function instrument (horizon) {
   Object.getPrototypeOf(Object.getPrototypeOf(horizon('users'))).watch =
     new Proxy(Object.getPrototypeOf(Object.getPrototypeOf(horizon('users'))).watch, {
       apply (_watch, thisArg, args) {
+        let queryName = ast2string(thisArg._query, 'watch')
         return _watch.bind(thisArg)(...args).map(c => {
-          observ.queries[ast2string(thisArg._query, 'watch')] = c
-          observ.update()
+          observ.queries[queryName] = c
+          observ.update(queryName, c, 'watch')
           return c
         })
       }
@@ -79,11 +81,12 @@ export function createDevTools (horizon) {
         position: props.defaultPosition || 'right',
         queries: devtools.queries,
         queryText: '',
-        queryTextError: false
+        queryTextError: false,
+        lastUpdate: null
       }
 
-      devtools.update = () => {
-        this.setState({ queries: devtools.queries })
+      devtools.update = lastUpdate => {
+        this.setState({ queries: devtools.queries, lastUpdate })
       }
     }
 
@@ -138,6 +141,11 @@ export function createDevTools (horizon) {
             theme={theme}
             invertTheme={false}
             hideRoot={true}
+            labelRenderer={([label]) =>
+              label === this.state.lastUpdate
+                ? <span style={{ color: theme.base09 }}>{label}:</span>
+                : <span>{label}:</span>
+            }
           />
         </pre>
         <textarea
