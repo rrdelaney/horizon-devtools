@@ -1,6 +1,6 @@
 {
   "name": "horizon-devtools",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Devtools for horizon",
   "main": "index.js",
   "scripts": {
