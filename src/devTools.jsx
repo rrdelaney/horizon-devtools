@@ -56,7 +56,6 @@ function instrument (horizon) {
     new Proxy(Object.getPrototypeOf(Object.getPrototypeOf(horizon('users'))).watch, {
       apply (_watch, thisArg, args) {
         return _watch.bind(thisArg)(...args).map(c => {
-          console.log(thisArg.toString())
           observ.queries[ast2string(thisArg._query, 'watch')] = c
           observ.update()
           return c
@@ -149,7 +148,7 @@ export function createDevTools (horizon) {
           onChange={this.handleQueryTextUpdate}
           value={this.state.queryText}
           onKeyUp={this.shouldRunQuery}
-          placeholder='Write a query using `horizon`. Run with ⌃ + ⏎.'
+          placeholder='Write a query using `horizon`. Run with ^ + Enter.'
           style={{ color: this.state.queryTextError ? 'red' : undefined,
                    padding: '5px',
                    position: 'absolute',
