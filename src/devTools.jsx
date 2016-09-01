@@ -69,7 +69,7 @@ function instrument (horizon) {
 
 export function createDevTools (horizon) {
   let devtools = instrument(horizon)
-  window.devtools = devtools
+  if (typeof window !== 'undefined') window.devtools = devtools
 
   return class HzDevTools extends Component {
     constructor (props) {
@@ -93,11 +93,11 @@ export function createDevTools (horizon) {
     }
 
     componentDidMount() {
-      window.addEventListener('keydown', this.handleKeyDown)
+      if (typeof window !== 'undefined') window.addEventListener('keydown', this.handleKeyDown)
     }
 
     componentWillUnmount() {
-      window.removeEventListener('keydown', this.handleKeyDown)
+      if (typeof window !== 'undefined') window.removeEventListener('keydown', this.handleKeyDown)
     }
 
     handleKeyDown (e) {
