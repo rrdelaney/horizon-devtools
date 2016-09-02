@@ -85,18 +85,19 @@ export function createDevTools (horizon) {
         queryText: '',
         queryTextError: false
       }
+    }
+
+    componentDidMount() {
+      if (typeof window !== 'undefined') window.addEventListener('keydown', this.handleKeyDown)
 
       devtools.update = () => {
         this.setState({ queries: devtools.queries })
       }
     }
 
-    componentDidMount() {
-      if (typeof window !== 'undefined') window.addEventListener('keydown', this.handleKeyDown)
-    }
-
     componentWillUnmount() {
       if (typeof window !== 'undefined') window.removeEventListener('keydown', this.handleKeyDown)
+      devtools.update = () => null
     }
 
     handleKeyDown (e) {
