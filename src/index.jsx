@@ -15,7 +15,7 @@ class App extends Component {
       posts: []
     }
 
-    horizon('posts').find({ message: 'hey' }).watch().subscribe(posts => {
+    horizon('posts').findAll({ message: 'hey' }).watch().subscribe(posts => {
       this.setState({ posts, loaded: true })
     })
   }
@@ -23,7 +23,10 @@ class App extends Component {
   render () {
     return <div>
       <h1>Posts</h1>
-      {this.state.posts.map(p => <li key={p.time.toISOString()}>{p.message} - <small>{p.time.toISOString()}</small></li>)}
+      {!this.state.loaded
+        ? null
+        : this.state.posts.map(p => <li key={p.time.toISOString()}>{p.message} - <small>{p.time.toISOString()}</small></li>)
+      }
     </div>
   }
 }

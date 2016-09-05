@@ -66,6 +66,52 @@ function instrument (horizon) {
     return observ
 }
 
+const Button = ({ onClick, children }) =>
+  <span onClick={onClick} style={{
+    flexGrow: '1',
+    cursor: 'pointer',
+    textAlign: 'center',
+    color: theme.base07,
+    backgroundColor: theme.base08,
+    borderRadius: '3px',
+    margin: '5px',
+    padding: '5px 0',
+    textDecoration: 'underline'
+  }}>
+    {children}
+  </span>
+
+const ButtonTabs = ({ onClick }) =>
+  <div style={{ display: 'flex' }}>
+    <Button onClick={() => onClick('query')}>Query</Button>
+    <Button onClick={() => onClick('user')}>User</Button>
+    {/* <Button onClick={() => onClick('feed')}>Feed</Button> */}
+  </div>
+
+const Logo = () =>
+  <span>
+    <img src='http://horizon.io/images/horizon-logo.png' style={{ maxWidth: '200px', width: '50%' }} />
+    <span style={{ color: '#5e5e5e' }}>[DEV TOOLS]</span>
+  </span>
+
+const QueryView = ({ queries }) =>
+  <JSONTree
+    data={queries}
+    theme={theme}
+    invertTheme={false}
+    hideRoot={true}
+  />
+
+const UserView = ({ user }) =>
+  user === null
+    ? <div style={{ color: theme.base01, margin: '.5em' }}>No user exists</div>
+    : <JSONTree
+      data={user}
+      theme={theme}
+      invertTheme={false}
+      hideRoot={true}
+    />
+
 export function createDevTools (horizon) {
   let devtools = instrument(horizon)
   if (typeof window !== 'undefined') window.devtools = devtools
@@ -82,13 +128,21 @@ export function createDevTools (horizon) {
         visible: props.defaultVisible || true,
         position: props.defaultPosition || 'right',
         queries: devtools.queries,
+        user: {},
         queryText: '',
-        queryTextError: false
+        queryTextError: false,
+        currentTab: 'query'
       }
     }
 
     componentDidMount() {
       if (typeof window !== 'undefined') window.addEventListener('keydown', this.handleKeyDown)
+
+      horizon.currentUser().watch().subscribe(user => {
+        this.setState({ user })
+      }, () => {
+        this.setState({ user: null })
+      })
 
       devtools.update = () => {
         this.setState({ queries: devtools.queries })
@@ -132,18 +186,20 @@ export function createDevTools (horizon) {
 
     render () {
       return <Dock position={this.state.position} isVisible={this.state.visible} dimMode='none'>
-        <pre style={{ padding: '10px', width: '100%', height: '100%', margin: 0, overflow: 'auto', backgroundColor: theme.base00 }}>
-          <span>
-            <img src='http://horizon.io/images/horizon-logo.png' style={{ maxWidth: '200px', width: '50%' }} />
-            <span style={{ color: '#5e5e5e' }}>[DEV TOOLS]</span>
-          </span>
+        <pre style={{ padding: '10px', width: 'calc(100% - 20px)', height: '90%', margin: 0, backgroundColor: theme.base00 }}>
+          <Logo />
           <hr style={{ borderStyle: 'solid', color: '#5e5e5e' }} />
-          <JSONTree
-            data={this.state.queries}
-            theme={theme}
-            invertTheme={false}
-            hideRoot={true}
-          />
+
+          <ButtonTabs onClick={currentTab => this.setState({ currentTab })} />
+
+          <div style={{ overflow: 'auto', height: '100%' }}>
+            {this.state.currentTab === 'query'
+              ? <QueryView queries={this.state.queries} />
+              : this.state.currentTab === 'user'
+              ? <UserView user={this.state.user} />
+              : null
+            }
+          </div>
         </pre>
         <textarea
           onChange={this.handleQueryTextUpdate}
