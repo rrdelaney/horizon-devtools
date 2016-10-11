@@ -7,7 +7,7 @@ const ast2string = (ast, live) => {
   // All queries except `find` are an array, so we normalize `find` here to be an array
   if (ast.find) ast.find = [ast.find]
   return ['find', 'find_all', 'above', 'below', 'order', 'limit'].reduce(
-    (res, key) => res + (!ast[key] ? '' : `.${key}(${JSON.stringify(ast[key][0]).replace(/[\[\]\"\{\}]/g, '')})`),
+    (res, key) => res + (!ast[key] ? '' : `.${key}(${JSON.stringify(ast[key][0]).replace(/[\[\]"\{\}]/g, '')})`),
     (live === 'watch' ? '🔄 ' : '') + ast.collection
   )
 }
@@ -63,7 +63,7 @@ function instrument (horizon) {
       }
     })
 
-    return observ
+  return observ
 }
 
 const Button = ({ onClick, children }) =>
@@ -135,7 +135,7 @@ export function createDevTools (horizon) {
       }
     }
 
-    componentDidMount() {
+    componentDidMount () {
       if (typeof window !== 'undefined') window.addEventListener('keydown', this.handleKeyDown)
 
       horizon.currentUser().watch().subscribe(user => {
@@ -149,7 +149,7 @@ export function createDevTools (horizon) {
       }
     }
 
-    componentWillUnmount() {
+    componentWillUnmount () {
       if (typeof window !== 'undefined') window.removeEventListener('keydown', this.handleKeyDown)
       devtools.update = () => null
     }
